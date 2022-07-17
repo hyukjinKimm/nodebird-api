@@ -49,6 +49,25 @@ router.get('/search/:hashtag', async (req, res, next) => {
   }
 });
 
+router.get('/myfollowings', async (req, res, next) => {
+  try {
+    const result = await request(req, '/followings/my');
+    res.json(result.data);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+router.get('/myfollowers', async (req, res, next) => {
+  try {
+    const result = await request(req, '/followers/my');
+    res.json(result.data);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.get('/', (req, res) => {
   res.render('main', { key: process.env.CLIENT_SECRET });
 });

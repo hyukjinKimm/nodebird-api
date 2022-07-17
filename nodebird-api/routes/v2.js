@@ -104,4 +104,54 @@ router.get('/posts/hashtag/:title', verifyToken, apiLimiter, async (req, res) =>
   }
 });
 
+router.get('/followings/my', apiLimiter, verifyToken, (req, res) => {
+  User.findOne({
+    where: { id: req.decoded.id  },
+    include: [{
+      model: User,
+      attributes: ['id', 'nick'],
+      as: 'Followings',
+    }],
+  })
+    .then((user) => {
+      console.log(user);
+      res.json({
+        code: 200,
+        payload: user.Followings,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({
+        code: 500,
+        message: '서버 에러',
+      });
+    });
+});
+
+router.get('/followers/my', apiLimiter, verifyToken, (req, res) => {
+  User.findOne({
+    where: { id: req.decoded.id  },
+    include: [{
+      model: User,
+      attributes: ['id', 'nick'],
+      as: 'Followers',
+    }],
+  })
+    .then((user) => {
+      console.log('ho')
+      console.log(user);
+      res.json({
+        code: 200,
+        payload: user.Followers,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return res.status(500).json({
+        code: 500,
+        message: '서버 에러',
+      });
+    });
+});
 module.exports = router;
